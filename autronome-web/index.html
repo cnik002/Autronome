@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autronome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: 'rgb(var(--bg-global) / <alpha-value>)',
+                        surface: 'rgb(var(--bg-card) / <alpha-value>)',
+                        primary: 'rgb(var(--color-primary) / <alpha-value>)',
+                        action: 'rgb(var(--color-accent) / <alpha-value>)',
+                        main: 'rgb(var(--text-main) / <alpha-value>)',
+                        muted: 'rgb(var(--text-muted) / <alpha-value>)',
+                        themeBorder: 'rgb(var(--border-color) / <alpha-value>)',
+                        input: 'rgb(var(--input-bg) / <alpha-value>)',
+                        success: '#22c55e',
+                        error: '#ef4444'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="config.js" onerror="window.CONFIG_LOAD_FAILED=true"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="themes.css">
+</head>
+
+<body class="bg-charcoal text-main min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative font-sans antialiased selection:bg-primary selection:text-white">
+
+    <div id="globalErrorBox" class="hidden fixed top-0 left-0 w-full bg-error text-white p-4 text-center font-bold z-50 shadow-lg shadow-error/20"></div>
+
+    <div class="fixed top-4 right-4 sm:top-6 sm:right-6 z-40">
+        <div class="relative">
+            <select id="themeSelect" class="bg-surface text-main rounded-lg font-bold text-sm sm:text-base shadow-lg border border-themeBorder hover:bg-surface/80 hover:text-main hover:border-themeBorder transition py-2 pl-3 pr-8 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer appearance-none w-36">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="goldtop">Goldtop</option>
+                <option value="cherryburst">Cherryburst</option>
+                <option id="flooFireOption" value="floo-fire" hidden>Floo Fire</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-surface/60 backdrop-blur-xl p-6 sm:p-8 lg:p-10 rounded-3xl border border-themeBorder theme-card w-full max-w-4xl space-y-6 sm:space-y-8 relative z-10">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-center border-b border-themeBorder pb-4 gap-4">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-main tracking-tight drop-shadow-sm">Autronome</h1>
+            <div class="flex w-full sm:w-auto gap-3">
+                <button id="accentToggleBtn" class="bg-input border border-themeBorder text-muted hover:text-main py-3 px-4 rounded-xl text-sm sm:text-base font-bold focus:outline-none transition active:scale-95 whitespace-nowrap shadow-sm">Accent: OFF</button>
+                <div id="timeSignatureContainer" class="relative w-full sm:w-28 hidden">
+                    <select id="timeSignatureSelect"
+                        class="w-full bg-input border border-themeBorder text-main py-3 px-4 pr-10 rounded-xl text-sm sm:text-base font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition appearance-none">
+                        <optgroup label="/2">
+                            <option value="2/2">2/2</option>
+                            <option value="3/2">3/2</option>
+                        </optgroup>
+                        <optgroup label="/4">
+                            <option value="2/4">2/4</option>
+                            <option value="3/4">3/4</option>
+                            <option value="4/4" selected>4/4</option>
+                            <option value="5/4">5/4</option>
+                            <option value="6/4">6/4</option>
+                        </optgroup>
+                        <optgroup label="/8">
+                            <option value="3/8">3/8</option>
+                            <option value="4/8">4/8</option>
+                            <option value="5/8">5/8</option>
+                            <option value="6/8">6/8</option>
+                            <option value="7/8">7/8</option>
+                            <option value="9/8">9/8</option>
+                            <option value="12/8">12/8</option>
+                        </optgroup>
+                        <optgroup label="/16">
+                            <option value="3/16">3/16</option>
+                        </optgroup>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-muted">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+                <div class="relative w-full sm:w-56">
+                    <select id="soundSelect"
+                        class="w-full bg-input border border-themeBorder text-main py-3 px-4 pr-10 rounded-xl text-sm sm:text-base font-bold focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition appearance-none">
+                        <option value="woodblock">🪵 Woodblock</option>
+                        <option value="clave">🥢 Clave</option>
+                        <option value="hihat">🥁 Hi-Hat</option>
+                        <option value="beep">🤖 Beep</option>
+                        <option value="kick">🔊 Kick Drum</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Controls -->
+        <div class="bg-input p-6 sm:p-8 rounded-2xl border border-themeBorder relative">
+            <div class="text-center mb-6">
+                <span id="manualBpmDisplay"
+                    class="font-mono text-7xl sm:text-8xl md:text-9xl lg:text-[120px] font-black text-main cursor-pointer select-none tracking-tighter leading-none"
+                    title="Tap to set tempo">100</span>
+                <span class="text-xl sm:text-2xl text-muted font-medium ml-2 uppercase tracking-widest">BPM</span>
+            </div>
+
+            <div class="flex items-center gap-4 sm:gap-6 mb-8">
+                <button id="btnMinus" class="w-14 h-14 sm:w-16 sm:h-16 bg-surface border border-themeBorder rounded-xl text-2xl font-bold hover:bg-surface/80 hover:border-themeBorder active:scale-95 transition flex items-center justify-center text-main">-</button>
+                <input type="range" id="bpmSlider" min="30" max="250" value="100" class="flex-1 custom-slider">
+                <button id="btnPlus" class="w-14 h-14 sm:w-16 sm:h-16 bg-surface border border-themeBorder rounded-xl text-2xl font-bold hover:bg-surface/80 hover:border-themeBorder active:scale-95 transition flex items-center justify-center text-main">+</button>
+            </div>
+
+            <!-- Play & Tap -->
+            <div class="flex w-full rounded-2xl shadow-lg overflow-hidden h-20 sm:h-24">
+                <button id="masterPlayBtn"
+                    class="w-3/4 bg-primary/20 hover:bg-primary/30 border border-primary/50 text-primary text-2xl sm:text-3xl font-bold transition flex justify-center items-center backdrop-blur-sm active:scale-[0.98] shadow-[inset_0_0_20px_rgba(168,85,247,0.2)]">
+                    <span>▶ Start</span>
+                </button>
+                <button id="tapZone"
+                    class="w-1/4 bg-action/20 hover:bg-action/30 border-y border-r border-action/50 text-action font-black text-xl sm:text-2xl transition flex justify-center items-center border-l-0 active:bg-action/50 active:scale-[0.98] shadow-[inset_0_0_15px_rgba(79,70,229,0.2)]">TAP</button>
+            </div>
+        </div>
+
+        <!-- AI Controls Input -->
+        <div class="space-y-4">
+            <textarea id="promptInput" rows="2"
+                class="w-full bg-input border border-themeBorder p-4 rounded-2xl text-lg text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none transition font-sans placeholder-muted"
+                placeholder="e.g. Master of Puppets, or alternate 100 and 140 every 10s"></textarea>
+            <div class="flex gap-3">
+                <button id="micBtn" class="bg-surface hover:bg-surface/80 border border-themeBorder text-main px-5 py-4 rounded-2xl text-2xl transition active:scale-95 flex items-center justify-center shadow-lg">🎤</button>
+                <button id="generateBtn" class="flex-1 generate-btn bg-action text-main py-4 rounded-2xl text-xl font-bold transition active:scale-[0.98]">Search / Generate</button>
+            </div>
+            <p id="statusMsg" class="text-sm sm:text-base text-muted min-h-[1.5rem] pl-2 font-mono"></p>
+            <div id="debugBox" class="hidden p-3 bg-input rounded-xl text-xs font-mono overflow-auto max-h-32 border border-themeBorder text-muted"></div>
+        </div>
+
+        <!-- AI Routine Display -->
+        <div id="aiControls" class="hidden border-t border-themeBorder pt-6">
+            <div class="flex justify-between items-center mb-4">
+                <div class="font-bold text-muted text-xs sm:text-sm uppercase tracking-widest">Routine Timeline</div>
+                <div id="loopIndicator" class="hidden bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/30 shadow-[0_0_10px_rgba(168,85,247,0.2)]">LOOPING</div>
+            </div>
+
+            <div id="routineList" class="space-y-2 max-h-72 overflow-y-auto bg-input p-3 rounded-2xl border border-themeBorder mb-6 custom-scrollbar"></div>
+
+            <div id="historySection" class="hidden border-t border-themeBorder pt-4">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="font-bold text-muted text-xs sm:text-sm uppercase tracking-widest">Recent Presets</div>
+                    <button id="clearHistoryBtn" class="text-error hover:text-red-400 text-sm font-bold transition">Clear</button>
+                </div>
+                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar"></div>
+            </div>
+        </div>
+    </div>
+
+    <button id="infoBtn"
+        class="fixed bottom-6 right-6 w-12 h-12 bg-surface text-main rounded-full font-serif font-bold text-xl shadow-lg border border-themeBorder hover:bg-surface/80 hover:text-main hover:border-themeBorder transition z-40 flex items-center justify-center">
+        i
+    </button>
+
+    <div id="infoModal"
+        class="hidden fixed bottom-24 right-6 w-80 sm:w-96 bg-surface/95 backdrop-blur-2xl rounded-2xl shadow-2xl p-6 z-50 border border-themeBorder text-sm text-muted">
+        <button id="closeInfoBtn" class="absolute top-3 right-4 text-muted hover:text-main text-2xl font-bold transition">&times;</button>
+        <h2 class="text-xl sm:text-2xl font-bold text-main mb-4">How to use Autronome</h2>
+        <div class="space-y-5">
+            <div>
+                <h3 class="font-bold text-primary mb-2">Song BPMs</h3>
+                <p class="text-xs sm:text-sm mb-2 text-muted">Type a song name to get its exact studio tempo.</p>
+                <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder">"Master of Puppets"</div>
+                <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder">"Paradise City at 85%"</div>
+                <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder">"Dark Side of the Moon bpm for each song for the duration of each song"</div>
+            </div>
+            <div>
+                <h3 class="font-bold text-primary mb-2">Routines & Loops</h3>
+                <p class="text-xs sm:text-sm mb-2 text-muted">Create personalized practice routines.</p>
+                <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder">"Alternate 100 and 120 bpm every 4 seconds"</div>
+                <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder">"Start at 60, increase by 5 every 10s until 100"</div>
+            </div>
+            
+            <div id="advancedInfoSection" class="hidden border-t border-themeBorder pt-4 mt-4 space-y-4">
+                <h3 class="font-bold text-action mb-2">✨ Expanded Capabilities</h3>
+                <div>
+                    <h4 class="font-bold text-primary mb-1">Time Signatures</h4>
+                    <p class="text-xs sm:text-sm mb-2 text-muted">Use the top menu to change the active time signature.</p>
+                    <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder mb-1">"Change from 4/4 to 3/4 every 4 seconds at 80 bpm"</div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary mb-1">Pitch Control</h4>
+                    <p class="text-xs sm:text-sm mb-2 text-muted">Change the pitch of the clicks using notes or chord progressions.</p>
+                    <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder mb-1">"Key and BPM of Perfect Strangers"</div>
+                    <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder mb-1">"Loop 90bpm: 2 bars A, 1 bar D, 1 bar E"</div>
+                    <div class="bg-input p-2 rounded-lg mt-1 text-xs font-mono text-primary/80 border border-themeBorder">"12 bar blues at 100 bpm in E"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-4 left-6 text-muted text-xs font-mono select-none pointer-events-none tracking-widest">
+        v3.1.2
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

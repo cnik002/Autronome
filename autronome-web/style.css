@@ -1,0 +1,209 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: rgb(var(--bg-global));
+    background-image: var(--bg-gradient, none);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: rgb(var(--text-main));
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay, none);
+    opacity: var(--bg-overlay-opacity, 1);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.theme-card {
+    box-shadow: var(--card-shadow);
+}
+
+/* Generate Button dynamic theme styling */
+.generate-btn {
+    border: 1px solid rgb(var(--color-accent));
+    box-shadow: 0 0 20px var(--color-accent-shadow);
+}
+.generate-btn:hover {
+    background-color: var(--color-accent-hover) !important;
+    border-color: var(--color-accent-hover);
+    box-shadow: 0 0 25px var(--color-accent-shadow);
+}
+
+/* Custom Scrollbar for dark theme */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Active Step Highlight */
+.active-step {
+    border-left: 4px solid rgb(var(--color-primary));
+    background: linear-gradient(90deg, rgb(var(--color-primary) / 0.1) 0%, rgb(var(--color-accent) / 0.05) 100%);
+    box-shadow: inset 0 0 10px rgb(var(--color-primary) / 0.1);
+}
+
+@media (min-width: 768px) {
+    .active-step {
+        border-left: 6px solid rgb(var(--color-primary));
+    }
+}
+
+/* Custom Slider - Cyber-Tactile Style */
+input[type=range].custom-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--slider-track);
+    outline: none;
+}
+
+input[type=range].custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--slider-thumb-width, 24px);
+    height: var(--slider-thumb-height, 24px);
+    border-radius: var(--slider-thumb-radius, 50%);
+    background: var(--slider-thumb);
+    background-image: var(--thumb-gradient, none);
+    cursor: pointer;
+    border: 2px solid var(--slider-thumb-border);
+    box-shadow: var(--slider-thumb-shadow);
+    transition: transform 0.1s, box-shadow 0.1s;
+    margin-top: calc((6px - var(--slider-thumb-height, 24px)) / 2);
+}
+
+input[type=range].custom-slider::-webkit-slider-thumb:active {
+    transform: scale(1.1);
+    box-shadow: var(--slider-thumb-shadow);
+}
+
+input[type=range].custom-slider::-moz-range-thumb {
+    width: var(--slider-thumb-width, 24px);
+    height: var(--slider-thumb-height, 24px);
+    border-radius: var(--slider-thumb-radius, 50%);
+    background: var(--slider-thumb);
+    background-image: var(--thumb-gradient, none);
+    cursor: pointer;
+    border: 2px solid var(--slider-thumb-border);
+    box-shadow: var(--slider-thumb-shadow);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+input[type=range].custom-slider::-moz-range-thumb:active {
+    transform: scale(1.1);
+    box-shadow: var(--slider-thumb-shadow);
+}
+
+/* History Item Hover */
+.history-item:hover {
+    background-color: rgb(var(--text-main) / 0.05);
+}
+
+.history-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgb(var(--text-main));
+}
+
+.history-item button.del-btn {
+    color: #ef4444;
+}
+.history-item button.del-btn:hover {
+    color: #f87171;
+}
+
+/* Step items responsive text size and styling */
+.step-item {
+    font-size: 0.875rem;
+    color: rgb(var(--text-main));
+    border-bottom: 1px solid rgb(var(--border-color));
+}
+.step-item:last-child {
+    border-bottom: none;
+}
+.step-item:hover {
+    background-color: rgb(var(--text-main) / 0.02);
+}
+.step-item span.font-bold {
+    color: rgb(var(--text-main));
+}
+.step-item span.font-mono {
+    color: rgb(var(--color-primary));
+}
+
+@media (min-width: 640px) {
+    .step-item { font-size: 1rem; }
+}
+
+@media (min-width: 768px) {
+    .step-item { font-size: 1.125rem; }
+}
+
+/* Info Popup Toggles */
+#infoBtn:hover+#infoModal,
+#infoModal:hover {
+    display: block;
+}
+
+#infoModal.stay-open {
+    display: block !important;
+}
+
+/* Brick Animation (Easter Egg) */
+.brick-wall-container {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+    overflow: hidden;
+}
+.brick {
+    width: 84px;
+    height: 34px;
+    margin: 0;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.2s ease;
+    flex-shrink: 0;
+}
+.brick-open {
+    transform: scale(0.2) translateZ(-200px) rotate(15deg);
+    opacity: 0;
+}
+
+/* Sparkle Animation for Easter Egg */
+.sparkle-particle {
+    position: fixed;
+    width: 9px;
+    height: 9px;
+    background: rgb(var(--color-primary));
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 15px rgb(var(--color-primary)), 0 0 30px rgb(var(--color-accent));
+    animation: sparkle-fall 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes sparkle-fall {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
+}

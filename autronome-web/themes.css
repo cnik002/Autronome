@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Autronome - Multi-Theme Design System (themes.css)
+   Generated for central style variant mapping via global CSS variables.
+   ========================================================================== */
+
+/* --- Default Light Pro Edition Theme --- */
+:root {
+    --bg-global: 252 249 242;
+    --bg-card: 255 255 255;
+    --text-main: 19 27 46;
+    --text-muted: 119 117 135;
+    --color-primary: 54 37 205;
+    --color-primary-hover: #5046e5;
+    --color-accent: 54 37 205;
+    --color-accent-hover: #5046e5;
+    --border-color: 199 196 216;
+    --input-bg: 255 255 255;
+    --slider-track: #e2e7ff;
+    --slider-thumb: #3625cd;
+    --slider-thumb-border: #ffffff;
+    --slider-thumb-shadow: 0px 4px 10px rgba(54, 37, 205, 0.2);
+    --color-accent-shadow: rgba(54, 37, 205, 0.4);
+    --bg-gradient: none;
+    --thumb-gradient: none;
+    --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+    --slider-thumb-width: 24px;
+    --slider-thumb-height: 24px;
+    --slider-thumb-radius: 50%;
+    --bg-overlay: none;
+    --bg-overlay-opacity: 1;
+}
+
+/* --- Pro Metronome Redesign Theme (Dark Slate & Purple) --- */
+html.theme-dark {
+    --bg-global: 0 0 0;
+    --bg-card: 31 31 34;
+    --text-main: 228 225 230;
+    --text-muted: 152 141 159;
+    --color-primary: 168 85 247;
+    --color-primary-hover: #b76dff;
+    --color-accent: 79 70 229;
+    --color-accent-hover: #6366f1;
+    --border-color: 77 67 84;
+    --input-bg: 19 19 22;
+    --slider-track: #353438;
+    --slider-thumb: #a855f7;
+    --slider-thumb-border: #131316;
+    --slider-thumb-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+    --color-accent-shadow: rgba(79, 70, 229, 0.4);
+    --bg-gradient: none;
+    --thumb-gradient: none;
+    --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    --slider-thumb-width: 24px;
+    --slider-thumb-height: 24px;
+    --slider-thumb-radius: 50%;
+    --bg-overlay: none;
+    --bg-overlay-opacity: 1;
+}
+
+/* --- Cherryburst Pro Theme (Rich Crimson Gradient & Fire Sunburst Elements) --- */
+html.theme-cherryburst {
+    --bg-global: 24 18 16;
+    --bg-card: 19 13 11;
+    --text-main: 237 224 220;
+    --text-muted: 170 137 133;
+    --color-primary: 255 179 71;
+    --color-primary-hover: #ffba3c;
+    --color-accent: 155 14 14;
+    --color-accent-hover: #b91c1c;
+    --border-color: 90 64 61;
+    --input-bg: 24 18 16;
+    --slider-track: #ef4444;
+    --slider-thumb: #ef4444;
+    --slider-thumb-border: #ffffff;
+    --slider-thumb-shadow: 0 0 10px rgba(239, 68, 68, 0.6), 0 4px 8px rgba(0,0,0,0.6);
+    --color-accent-shadow: rgba(155, 14, 14, 0.4);
+    --bg-gradient: radial-gradient(circle at center, #FFB347 0%, #410001 70%, #181210 100%);
+    --thumb-gradient: none;
+    --card-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.5);
+    --slider-thumb-width: 24px;
+    --slider-thumb-height: 24px;
+    --slider-thumb-radius: 50%;
+    --bg-overlay: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(0,0,0,0.2) 45px, transparent 50px);
+    --bg-overlay-opacity: 0.12;
+}
+
+/* --- Ultimate Goldtop Pro Edition Theme (Rich Gold & Vintage Dark Elements) --- */
+html.theme-goldtop {
+    --bg-global: 36 12 6;
+    --bg-card: 36 12 6;
+    --text-main: 245 230 204;
+    --text-muted: 138 122 95;
+    --color-primary: 212 175 55;
+    --color-primary-hover: #e9c349;
+    --color-accent: 212 175 55;
+    --color-accent-hover: #e9c349;
+    --border-color: 92 64 51;
+    --input-bg: 26 5 2;
+    --slider-track: #240C06;
+    --slider-thumb: #d4af37;
+    --slider-thumb-border: #240c06;
+    --slider-thumb-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+    --color-accent-shadow: rgba(212, 175, 55, 0.4);
+    --bg-gradient: radial-gradient(circle at center, #E9C349 0%, #D4AF37 40%, #8B6D1E 75%, #240C06 100%);
+    --thumb-gradient: none;
+    --card-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    --slider-thumb-width: 24px;
+    --slider-thumb-height: 24px;
+    --slider-thumb-radius: 50%;
+    --bg-overlay: radial-gradient(circle at center, transparent 30%, rgba(36, 12, 6, 0.4) 100%);
+    --bg-overlay-opacity: 1;
+}
+
+/* --- Floo Fire Theme (Deep Forest Dark & Radioactive Neon Green) --- */
+html.theme-floo-fire {
+    --bg-global: 7 17 6;
+    --bg-card: 12 22 10;
+    --text-main: 218 230 210;
+    --text-muted: 132 150 126;
+    --color-primary: 0 255 65;
+    --color-primary-hover: #72ff70;
+    --color-accent: 0 255 65;
+    --color-accent-hover: #72ff70;
+    --border-color: 59 75 55;
+    --input-bg: 7 17 6;
+    --slider-track: rgba(0, 255, 65, 0.1);
+    --slider-thumb: #00FF41;
+    --slider-thumb-border: #00FF41;
+    --slider-thumb-shadow: 0 0 20px rgba(0, 255, 65, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    --color-accent-shadow: rgba(0, 255, 65, 0.4);
+    --bg-gradient: linear-gradient(rgba(7, 17, 6, 0.7), rgba(7, 17, 6, 0.7)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuBVUVRVXZQR6qVkJtN4MdLVEsYKqPVp7wZotU8wGjFJ5PU0nYRf5E2Lyo44hbFNiTvyvZpVtiJSiWHzyXoYZK2VjibCTJImpNfO1pMdtZBRIGYlC6Ori7AJcrwzAM19LndMg95KqsjgNtLrxZ8patopnjRMXrot2KAYhMOh93fgTRspg-SJKon4CE6QuGLnlmSAaLuDmZYnAGw5JVFfvHCv0ZTikQyOjSqVMQDb8pzoCvTm5pQiLzslhM6xKiNPocvLVXnkmAJBm1A');
+    --thumb-gradient: none;
+    --card-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.02), 0 10px 40px rgba(0, 0, 0, 0.8);
+    --slider-thumb-width: 24px;
+    --slider-thumb-height: 24px;
+    --slider-thumb-radius: 50%;
+    --bg-overlay: none;
+    --bg-overlay-opacity: 1;
+}

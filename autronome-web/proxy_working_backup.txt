@@ -1,0 +1,134 @@
+// Add multiple API keys here - it will try them in order
+const API_KEYS = [
+  PropertiesService.getScriptProperties().getProperty("GEMINI_API_KEY"),
+  PropertiesService.getScriptProperties().getProperty("GEMINI_API_KEY_2"),
+  PropertiesService.getScriptProperties().getProperty("GEMINI_API_KEY_3")
+].filter(function(key) { return key && key.length > 0; });
+
+function doGet(e) { return handleRequest(e); }
+function doPost(e) { return handleRequest(e); }
+
+function handleRequest(e) {
+  try {
+    let userPrompt, systemPrompt;
+    
+    if (e.parameter && e.parameter.prompt) {
+      userPrompt = e.parameter.prompt;
+      systemPrompt = e.parameter.systemPrompt || "";
+    } else if (e.postData && e.postData.contents) {
+      const data = JSON.parse(e.postData.contents);
+      userPrompt = data.prompt;
+      systemPrompt = data.systemPrompt || "";
+    } else {
+      return ContentService.createTextOutput("Proxy ready.")
+        .setMimeType(ContentService.MimeType.TEXT);
+    }
+
+    // Call the function that loops through your keys
+    const result = callGeminiWithMultipleKeys(userPrompt, systemPrompt);
+    
+    return ContentService.createTextOutput(result)
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ error: "Script Error: " + error.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function callGeminiWithMultipleKeys(userPrompt, systemPrompt) {
+  var lastError = "";
+  
+  // Try each API key in your list
+  for (var keyIndex = 0; keyIndex < API_KEYS.length; keyIndex++) {
+    var apiKey = API_KEYS[keyIndex];
+    
+    try {
+      // 1. DYNAMICALLY FIND THE BEST MODEL
+      var modelName = getBestModel(apiKey);
+      var url = "https://generativelanguage.googleapis.com/v1beta/" + modelName + ":generateContent?key=" + apiKey;
+      
+      var payload = {
+        "contents": [{
+          "parts": [{
+            "text": systemPrompt + "\nCRITICAL: Use Google Search to find the exact BPM.\nUser Request: " + userPrompt
+          }]
+        }],
+        // 👇 THIS IS THE FIX (Simplified Tool) 👇
+        "tools": [{ "googleSearch": {} }],
+        "generationConfig": {
+          "temperature": 0.0
+        }
+      };
+
+      var options = {
+        "method": "post",
+        "contentType": "application/json",
+        "payload": JSON.stringify(payload),
+        "muteHttpExceptions": true
+      };
+      
+      var response = UrlFetchApp.fetch(url, options);
+      var responseCode = response.getResponseCode();
+      var responseText = response.getContentText();
+
+      // Check for Quota limits (429) or Permission issues (403)
+      if (responseCode === 429 || responseCode === 403) {
+        lastError = "Key " + (keyIndex + 1) + " quota/permission error";
+        continue; // Try next key
+      }
+
+      if (responseCode !== 200) {
+        lastError = "API Error " + responseCode + ": " + responseText;
+        continue;
+      }
+
+      return responseText;
+      
+    } catch (error) {
+      lastError = error.message;
+      continue;
+    }
+  }
+  
+  return JSON.stringify({ 
+    error: "All API keys exhausted. Last error: " + lastError 
+  });
+}
+
+function getBestModel(apiKey) {
+  try {
+    var listUrl = "https://generativelanguage.googleapis.com/v1beta/models?key=" + apiKey;
+    var response = UrlFetchApp.fetch(listUrl, { "muteHttpExceptions": true });
+    
+    if (response.getResponseCode() !== 200) return "models/gemini-1.5-flash"; 
+    
+    var data = JSON.parse(response.getContentText());
+    if (!data.models || data.models.length === 0) return "models/gemini-1.5-flash";
+
+    var validModels = data.models.filter(function(m) {
+      return m.supportedGenerationMethods && m.supportedGenerationMethods.indexOf("generateContent") !== -1;
+    });
+
+    // Prioritize PRO models
+    var proModels = validModels.filter(function(m) {
+      return m.name.toLowerCase().indexOf("pro") !== -1 && m.name.indexOf("1.5") !== -1;
+    });
+
+    if (proModels.length > 0) {
+      proModels.sort(function(a, b) { return b.name.localeCompare(a.name); });
+      return proModels[0].name;
+    }
+
+    var flashModels = validModels.filter(function(m) {
+      return m.name.toLowerCase().indexOf("flash") !== -1;
+    });
+
+    if (flashModels.length > 0) return flashModels[0].name;
+
+    return validModels[0].name;
+    
+  } catch (error) {
+    return "models/gemini-1.5-flash";
+  }
+}
